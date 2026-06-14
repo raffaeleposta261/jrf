@@ -3,25 +3,326 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Prevent search engine indexing -->
+    <meta name="color-scheme" content="light dark">
+       <!-- Prevent search engine indexing -->
     <meta name="robots" content="noindex, nofollow">
-
-    <title>Domain Connected</title>
+    <title>HTMLcraft.uk</title>
 
     <style>
+        :root {
+            --top-bottom-bar-bg: #ffffff;
+            --middle-bg: #E6E6E6;
+            --text-color: #111111;
+
+            --hamburger-line-color: #111111;
+            --hamburger-line-thickness: 3px;
+            --hamburger-line-length: 26px;
+
+            --marquee-speed: 20s;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            font-family: "Courier New", monospace;
-            font-style: italic;
-            background: #f2f0e9; /* grigio panna */
-            padding: 40px;
+            font-family: "Segoe UI", Roboto, sans-serif;
+            background: var(--middle-bg);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        *:focus, *:active {
+            outline: none !important;
+            -webkit-tap-highlight-color: transparent !important;
+        }
+
+        .top-bar, .bottom-bar {
+            background: var(--top-bottom-bar-bg);
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            position: fixed;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .top-bar { top: 0; }
+        .bottom-bar { bottom: 0; }
+
+        /* HAMBURGER */
+        .hamburger {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+            margin-right: 15px;
+            user-select: none;
+        }
+
+        .hamburger span {
+            width: var(--hamburger-line-length);
+            height: var(--hamburger-line-thickness);
+            background: var(--hamburger-line-color);
+            transition: 0.3s;
+            box-shadow:
+        0 0 2px #F2F2F2,
+        0 0 6px #F2F2F2,
+        0 0 12px #F2F2F2;
+        }
+
+        /* MARQUEE */
+        .marquee-container {
+            overflow: hidden;
+            white-space: nowrap;
+            width: 100%;
+        }
+
+        .marquee-text{
+    display:flex;
+    align-items:center;
+    width:max-content;
+    padding-left:100%;
+    animation:marquee var(--marquee-speed) linear infinite;
+}
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+
+        /* SIDE PANEL */
+        .side-panel {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 70%;
+            height: 100%;
+            background: #ffffff;
+            padding: 80px 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            transition: 0.4s ease;
+            z-index: 2000;
+        }
+
+        .side-panel.open {
+            right: 0;
+        }
+
+        .side-panel a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 1.3rem;
+            opacity: 0.9;
+            user-select: none;
+        }
+
+        /* MAIN CONTENT */
+        .main-layout {
+            flex: 1;
+            padding: 20px;
+            padding-top: 80px;
+            padding-bottom: 80px;
+            overflow-y: auto;
+        }
+
+        .hero-title { font-size: 1.6rem; font-weight: 600; }
+        .hero-subtitle { font-size: 1rem; opacity: 0.8; }
+
+        pre {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.85rem;
+            line-height: 1.4rem;
+        }
+
+        code {
+            font-family: Consolas, "Courier New", monospace;
+        }
+
+        .portfolio {
+            margin-top: 40px;
+        }
+
+        .portfolio h2 {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+        }
+
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        }
+
+        .portfolio-item {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 15px;
             text-align: center;
-            color: #333;
+        }
+
+        .portfolio-item img {
+            max-width: 100%;
+            max-height: 200px;
+            object-fit: contain;
+            margin-bottom: 10px;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .gallery-item {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .gallery-item img {
+            max-width: 100%;
+            max-height: 260px;
+            object-fit: contain;
+        }
+
+        @media (max-width: 768px) {
+            .side-panel { width: 80%; }
         }
     </style>
+
+    <script>
+        function toggleMenu() {
+            const panel = document.querySelector(".side-panel");
+
+            if (panel.classList.contains("open")) {
+                panel.classList.remove("open");
+                history.back();
+            } else {
+                panel.classList.add("open");
+                history.pushState({ menu: true }, "");
+            }
+        }
+
+        window.onpopstate = function(event) {
+            document.querySelector(".side-panel").classList.remove("open");
+        };
+    </script>
 </head>
+
 <body>
-    <p>This domain is connected to the GitHub account <strong>raffaeleposta261</strong>.</p>
-    <p>Indexing is disabled for privacy and development purposes.</p>
+
+    <div class="top-bar">
+        <div class="hamburger" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        
+        
+        
+        
+        <div class="marquee-container">
+    <div class="marquee-text">
+
+        <svg xmlns="http://www.w3.org/2000/svg"
+             viewBox="-10 0 2800 250"
+             role="img"
+             aria-hidden="true"
+             style="display:block;width:720px;height:auto;">
+
+            <style>
+                @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
+                .gv{
+                    font-family:'Great Vibes',cursive;
+                    font-style:normal;
+                }
+            </style>
+
+            <text x="0"
+                  y="60%"
+                  text-anchor="start"
+                  class="gv"
+                  fill="#222"
+                  font-size="82"
+                  letter-spacing="2"
+                  transform="scale(1.7,1)">
+                htmlcraft.uk, Torre del Lago, - 2026
+            </text>
+
+        </svg>
+
+    </div>
+</div>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    </div>
+
+    <div class="side-panel">
+        <a href="#portfolio" onclick="toggleMenu()">Portfolio</a>
+        <a href="#gallery" onclick="toggleMenu()">Gallery</a>
+        <a href="#contact" onclick="toggleMenu()">Contact</a>
+    </div>
+
+    <main class="main-layout">
+        
+        
+        <div class="hero-title" style="font-family:'Courier New',Courier,monospace;font-style:italic;letter-spacing:1px;">Giovanni Raffaele Siciliano</div>
+
+<div class="hero-subtitle" style="font-family:'Courier New',Courier,monospace;font-style:italic;letter-spacing:1px;"><p>This domain is connected to the GitHub account <strong>raffaeleposta261</strong>.</p>
+    <p>Indexing is disabled for privacy and development purposes.</p></div>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    </main>
+
+    <div class="bottom-bar">
+        © 2026 Giovanni Raffaele Siciliano — All rights reserved. Website developed by Giovanni Raffaele Siciliano.
+    </div>
+
 </body>
 </html>
